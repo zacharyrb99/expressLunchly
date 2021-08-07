@@ -18,6 +18,23 @@ router.get("/", async function(req, res, next) {
   }
 });
 
+//Get top 10 customers
+router.get('/best-customers', async (req, res, next) => {
+  try {
+    let customerIds = await Customer.best();
+    let customers = [];
+    
+    for(let id in customerIds){
+      let results = await Customer.get(customerIds[id]);
+      customers.push(results);
+    }
+
+    return res.render('best_customers.html', { customers });
+  } catch(e) {
+    return next(e);
+  }
+});
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function(req, res, next) {

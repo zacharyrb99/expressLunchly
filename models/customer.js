@@ -53,6 +53,27 @@ class Customer {
     return new Customer(customer);
   }
 
+  //Return best customers
+  static async best() {
+    let bestCustomersIds = await db.query(
+      `SELECT customer_id, COUNT(*) FROM reservations 
+      GROUP BY customer_id ORDER BY COUNT(*) DESC LIMIT 10;`);
+
+    let ids = [];
+
+    for(let customer in bestCustomersIds.rows){
+      ids.push(bestCustomersIds.rows[customer].customer_id);
+    }
+
+    return ids;
+  }
+
+  // return full name of customer
+
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
   /** get all reservations for this customer. */
 
   async getReservations() {
